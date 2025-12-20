@@ -46,7 +46,6 @@ export function LocationForm({
     logo: location?.logo || "",
     lat: location?.lat || 0,
     lon: location?.lon || 0,
-    timezone: (location as any)?.timezone || "America/Los_Angeles",
   });
 
   // Determine if the coordinates are missing.  If either latitude or
