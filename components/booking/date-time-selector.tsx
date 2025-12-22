@@ -266,31 +266,13 @@ export function DateTimeSelector() {
     if (date) {
       console.log('📅 Calendar raw date selected:', date)
       console.log('📅 Calendar raw date ISO:', date.toISOString())
-      
-      // Normalizar la fecha a medianoche en PST para evitar desplazamientos de timezone
-      const dateStr = formatInTimeZone(date, PST_TZ, "yyyy-MM-dd")
-      console.log('📅 Date in PST format (yyyy-MM-dd):', dateStr)
-      
-      const normalizedDate = new Date(`${dateStr}T00:00:00`)
-      console.log('📅 Normalized date:', normalizedDate)
-      console.log('📅 Normalized date ISO:', normalizedDate.toISOString())
-      console.log('📅 Normalized date formatted in PST:', formatInTimeZone(normalizedDate, PST_TZ, "EEEE, MMMM d"))
-      
-      update({ selectedDate: normalizedDate })
+      update({ selectedDate: date })
     }
   }
 
   const handleTimeSelect = (time: string) => {
     update({ selectedTime: time })
   }
-
-  // Log para debug de la fecha seleccionada
-  useEffect(() => {
-    if (data.selectedDate && data.selectedTime) {
-      console.log('📊 Summary - data.selectedDate:', data.selectedDate, 'ISO:', data.selectedDate.toISOString())
-      console.log('📊 Summary - formatted in PST:', formatInTimeZone(data.selectedDate, PST_TZ, "EEEE, MMMM d"))
-    }
-  }, [data.selectedDate, data.selectedTime])
 
   // Verificar si una fecha está disponible (no es pasado y la clínica está abierta con slots activos), respetando overrides
   const isDateAvailable = (date: Date) => {
@@ -452,7 +434,13 @@ export function DateTimeSelector() {
                           </div>
                           <div>
                             <p className="text-xs text-muted-foreground">{t('date')}</p>
-                            <p className="text-sm font-semibold text-foreground">{data.selectedDate ? formatInTimeZone(data.selectedDate, PST_TZ, "EEEE, MMMM d") : ''}</p>
+                            <p className="text-sm font-semibold text-foreground">
+                              {data.selectedDate ? format.dateTime(data.selectedDate, {
+                                weekday: 'long',
+                                month: 'long',
+                                day: 'numeric',
+                              }) : ''}
+                            </p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
@@ -465,7 +453,6 @@ export function DateTimeSelector() {
                               {data.selectedTime ? format.dateTime(new Date(`2000-01-01T${data.selectedTime}:00`), {
                                 hour: 'numeric',
                                 minute: 'numeric',
-                                timeZone: PST_TZ
                               }) : ''}
                             </p>
                           </div>
