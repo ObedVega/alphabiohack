@@ -2,7 +2,7 @@
 
 import { Calendar as CalendarIcon, Clock } from "lucide-react"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { PST_TZ, dateKeyInTZ, dayOfWeekInTZ, combineDateAndTimeToUtc, formatInTZ } from "@/lib/utils/timezone"
+import { PST_TZ, dateKeyInTZ, dayOfWeekInTZ } from "@/lib/utils/timezone"
 import { useBusinessHours, useOverrides, useServices, useTherapistBookings } from "@/hooks"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useFormatter, useNow, useTranslations } from "next-intl"
