@@ -273,6 +273,18 @@ export function DateTimeSelector() {
     update({ selectedTime: time })
   }
 
+  // Función auxiliar para formatear la hora en PST (mismo formato que los slots)
+  const formatTimeInPST = (timeHHmm: string): string => {
+    const [hours, minutes] = timeHHmm.split(":").map(Number)
+    const date = new Date()
+    date.setHours(hours, minutes, 0, 0)
+    return format.dateTime(date, { 
+      hour: 'numeric', 
+      minute: 'numeric',
+      timeZone: PST_TZ
+    })
+  }
+
   // Verificar si una fecha está disponible (no es pasado y la clínica está abierta con slots activos), respetando overrides
   const isDateAvailable = (date: Date) => {
     // Comparar por clave PST para evitar variaciones por tz del dispositivo
@@ -449,10 +461,7 @@ export function DateTimeSelector() {
                           <div>
                             <p className="text-xs text-muted-foreground">{t('time')}</p>
                             <p className="text-sm font-semibold text-foreground">
-                              {data.selectedTime ? format.dateTime(new Date(`2000-01-01T${data.selectedTime}:00`), {
-                                hour: 'numeric',
-                                minute: 'numeric',
-                              }) : ''}
+                              {data.selectedTime ? formatTimeInPST(data.selectedTime) : ''}
                             </p>
                           </div>
                         </div>
