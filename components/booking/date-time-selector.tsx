@@ -139,17 +139,14 @@ export function DateTimeSelector() {
       const mins = minutes % 60
       const timeString = `${hours.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}`
       
-      // Convertir a formato AM/PM en PST para mostrar
-      const date = new Date()
-      const dateInPst = new Date(date)
-      dateInPst.setHours(hours, mins, 0, 0)
+      // Convertir a formato AM/PM (sin usar timezone)
+      const isPM = hours >= 12
+      const displayHours = hours > 12 ? hours - 12 : (hours === 0 ? 12 : hours)
+      const display = `${displayHours}:${mins.toString().padStart(2, "0")} ${isPM ? 'PM' : 'AM'}`
+      
       return {
         value: timeString, // Valor para almacenar (formato 24h)
-        display: format.dateTime(dateInPst, { 
-          hour: 'numeric', 
-          minute: 'numeric',
-          timeZone: PST_TZ
-        }) // Valor para mostrar (formato AM/PM)
+        display: display // Valor para mostrar (formato AM/PM)
       }
     }
 
