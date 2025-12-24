@@ -3,7 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CheckCircle, Phone, QrCode } from "lucide-react"
-import { PST_TZ, dateKeyInTZ } from "@/lib/utils/timezone"
+import { PST_TZ } from "@/lib/utils/timezone"
 import { useFormatter, useTranslations } from "next-intl"
 import { useLocations, useServices, useTherapist } from "@/hooks"
 
@@ -39,18 +39,17 @@ export function BookingConfirmation() {
     if (!data.selectedDate || !data.selectedTime) return t('noAppointmentScheduled')
     
     try {
-      const dateStr = dateKeyInTZ(data.selectedDate, PST_TZ)
-      const appointmentDateTime = new Date(`${dateStr}T${data.selectedTime}:00`)
+      const startTime = formatTimeInPST(data.selectedTime)
+      const endTime = formatTimeInPST(endTimeHHmm)
       
-      return format.dateTime(appointmentDateTime, {
+      // Extract just the date part
+      const datePart = format.dateTime(data.selectedDate, {
         year: 'numeric',
         month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true,
-        timeZone: PST_TZ
+        day: 'numeric'
       })
+      
+      return `${datePart} at ${startTime} - ${endTime}`
     } catch {
       return `${data.selectedDate?.toLocaleDateString()} ${data.selectedTime}`
     }
@@ -66,6 +65,19 @@ export function BookingConfirmation() {
     const em = endMinutes % 60
     return `${eh.toString().padStart(2,'0')}:${em.toString().padStart(2,'0')}`
   }, [data.selectedTime, selectedService])
+
+  // Format time in PST (same format as time slots)
+  const formatTimeInPST = (timeHHmm: string): string => {
+    const [hours, minutes] = timeHHmm.split(":").map(Number)
+    const date = new Date()
+    date.setHours(hours, minutes, 0, 0)
+    return format.dateTime(date, { 
+      hour: 'numeric', 
+      minute: 'numeric',
+      hour12: true,
+      timeZone: PST_TZ
+    })
+  }
   
   return (
     <div className="max-w-4xl mx-auto space-y-8">

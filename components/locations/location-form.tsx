@@ -23,7 +23,7 @@ interface LocationFormProps {
   onToggle: () => void;
   onCancel: () => void;
   onSave: () => void;
-  onSubmit?: (formData: { title: string; address: string; description: string; logo: string; lat: number; lon: number }) => Promise<void>;
+  onSubmit?: (formData: { title: string; address: string; description: string; logo: string; lat: number; lon: number; timezone?: string }) => Promise<void>;
   onDelete?: () => Promise<void>;
   loading?: boolean;
 }

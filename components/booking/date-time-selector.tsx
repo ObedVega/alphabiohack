@@ -139,17 +139,14 @@ export function DateTimeSelector() {
       const mins = minutes % 60
       const timeString = `${hours.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}`
       
-      // Convertir a formato AM/PM en PST para mostrar
-      const date = new Date()
-      const dateInPst = new Date(date)
-      dateInPst.setHours(hours, mins, 0, 0)
+      // Convertir a formato AM/PM (sin usar timezone)
+      const isPM = hours >= 12
+      const displayHours = hours > 12 ? hours - 12 : (hours === 0 ? 12 : hours)
+      const display = `${displayHours}:${mins.toString().padStart(2, "0")} ${isPM ? 'PM' : 'AM'}`
+      
       return {
         value: timeString, // Valor para almacenar (formato 24h)
-        display: format.dateTime(dateInPst, { 
-          hour: 'numeric', 
-          minute: 'numeric',
-          timeZone: PST_TZ
-        }) // Valor para mostrar (formato AM/PM)
+        display: display // Valor para mostrar (formato AM/PM)
       }
     }
 
@@ -178,7 +175,7 @@ export function DateTimeSelector() {
       // Si un servicio dura 45 minutos, los slots se generarán cada 45 minutos
       const slotInterval = serviceDuration > 0 ? serviceDuration : 30 // Fallback a 30 min si no hay servicio
       
-      for (let minutes = slotStartMinutes; minutes + totalDuration <= slotEndMinutes; minutes += slotInterval) {
+      for (let minutes = slotStartMinutes; minutes < slotEndMinutes; minutes += slotInterval) {
         const timeSlot = minutesToTime(minutes)
         const isBooked = isTimeSlotBooked(selectedDate, timeSlot.value)
         
@@ -263,6 +260,8 @@ export function DateTimeSelector() {
 
   const handleDateSelect = (date: Date | undefined) => {
     if (date) {
+      console.log('📅 Calendar raw date selected:', date)
+      console.log('📅 Calendar raw date ISO:', date.toISOString())
       update({ selectedDate: date })
     }
   }
@@ -271,11 +270,14 @@ export function DateTimeSelector() {
     update({ selectedTime: time })
   }
 
-  const formatSelectedDate = (date: Date) => {
-    return format.dateTime(date, {
-      weekday: 'long',
-      month: 'long',
-      day: 'numeric',
+  // Función auxiliar para formatear la hora en PST (mismo formato que los slots)
+  const formatTimeInPST = (timeHHmm: string): string => {
+    const [hours, minutes] = timeHHmm.split(":").map(Number)
+    const date = new Date()
+    date.setHours(hours, minutes, 0, 0)
+    return format.dateTime(date, { 
+      hour: 'numeric', 
+      minute: 'numeric',
       timeZone: PST_TZ
     })
   }
@@ -440,7 +442,13 @@ export function DateTimeSelector() {
                           </div>
                           <div>
                             <p className="text-xs text-muted-foreground">{t('date')}</p>
-                            <p className="text-sm font-semibold text-foreground">{data.selectedDate ? formatSelectedDate(data.selectedDate) : ''}</p>
+                            <p className="text-sm font-semibold text-foreground">
+                              {data.selectedDate ? format.dateTime(data.selectedDate, {
+                                weekday: 'long',
+                                month: 'long',
+                                day: 'numeric',
+                              }) : ''}
+                            </p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
@@ -450,11 +458,7 @@ export function DateTimeSelector() {
                           <div>
                             <p className="text-xs text-muted-foreground">{t('time')}</p>
                             <p className="text-sm font-semibold text-foreground">
-                              {data.selectedTime ? format.dateTime(new Date(`2000-01-01T${data.selectedTime}`), {
-                                hour: 'numeric',
-                                minute: 'numeric',
-                                timeZone: PST_TZ
-                              }) : ''}
+                              {data.selectedTime ? formatTimeInPST(data.selectedTime) : ''}
                             </p>
                           </div>
                         </div>

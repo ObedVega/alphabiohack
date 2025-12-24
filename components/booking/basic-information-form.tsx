@@ -58,37 +58,37 @@ export function BasicInformationForm() {
   // Calcular duración total
   const totalDuration = selectedServices.reduce((total, service) => total + service.duration, 0)
 
-  // Formatear fecha seleccionada usando useFormatter
+  // Formatear fecha seleccionada
   const formatSelectedDate = () => {
     if (!data.selectedDate) return t('selectDate')
     
     return format.dateTime(data.selectedDate, {
       weekday: "long",
       day: "numeric",
-      month: "long",
-      timeZone: PST_TZ
+      month: "long"
     })
   }
 
-  // Formatear hora seleccionada usando useFormatter
+  // Formatear hora seleccionada
   const formatSelectedTime = () => {
     if (!data.selectedTime) return t('selectTime')
     
-    const [hours, minutes] = data.selectedTime.split(":")
-    const startTime = new Date()
-    startTime.setHours(parseInt(hours), parseInt(minutes), 0, 0)
+    const [hours, minutes] = data.selectedTime.split(":").map(Number)
     
-    const endTime = new Date()
-    endTime.setHours(parseInt(hours), parseInt(minutes) + totalDuration, 0, 0)
+    const startDate = new Date()
+    startDate.setHours(hours, minutes, 0, 0)
     
-    const startTime12 = format.dateTime(startTime, {
+    const endDate = new Date()
+    endDate.setHours(hours, minutes + totalDuration, 0, 0)
+    
+    const startTime12 = format.dateTime(startDate, {
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
       timeZone: PST_TZ
     })
     
-    const endTime12 = format.dateTime(endTime, {
+    const endTime12 = format.dateTime(endDate, {
       hour: "numeric",
       minute: "2-digit",
       hour12: true,

@@ -46,7 +46,7 @@ export function AppointmentInviteEmail({
   }
 
   const dateLine = `${formatInTZ(start, 'EEEE dd MMMM yyyy', PST_TZ)}`
-  const timeLine = `${formatInTZ(start, 'hh:mm a', PST_TZ)} – ${formatInTZ(end, 'hh:mm a', PST_TZ)} (${PST_TZ})`
+  const timeLine = `${formatInTZ(start, 'hh:mm a', PST_TZ)} – ${formatInTZ(end, 'hh:mm a', PST_TZ)}`
 
   return (
     <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '600px', margin: '0 auto', backgroundColor: '#ffffff' }}>
