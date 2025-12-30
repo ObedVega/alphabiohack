@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Clock, MapPin, Plus, Stethoscope, User } from "lucide-react"
 import { useFormatter, useTranslations } from "next-intl"
 import { useLocations, useServices, useSpecialties, useTherapist } from "@/hooks"
-import { PST_TZ } from "@/lib/utils/timezone"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
