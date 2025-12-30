@@ -70,33 +70,25 @@ export function BasicInformationForm() {
   }
 
   // Formatear hora seleccionada
-  const formatSelectedTime = () => {
-    if (!data.selectedTime) return t('selectTime')
-    
-    const [hours, minutes] = data.selectedTime.split(":").map(Number)
-    
-    const startDate = new Date()
-    startDate.setHours(hours, minutes, 0, 0)
-    
-    const endDate = new Date()
-    endDate.setHours(hours, minutes + totalDuration, 0, 0)
-    
-    const startTime12 = format.dateTime(startDate, {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-      timeZone: PST_TZ
-    })
-    
-    const endTime12 = format.dateTime(endDate, {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-      timeZone: PST_TZ
-    })
-    
-    return `${startTime12} - ${endTime12}`
+const formatSelectedTime = () => {
+  if (!data.selectedTime) return t('selectTime')
+  const [hours, minutes] = data.selectedTime.split(':').map(Number)
+
+  // calcula hora de término sumando la duración total en minutos
+  const endMinutesTotal = hours * 60 + minutes + totalDuration
+  const endHours = Math.floor(endMinutesTotal / 60) % 24
+  const endMins = endMinutesTotal % 60
+
+  // función auxiliar para convertir HH:mm a formato 12 h
+  const to12h = (h: number, m: number) => {
+    const isPM = h >= 12
+    const displayHours = h % 12 === 0 ? 12 : h % 12
+    const displayMinutes = m.toString().padStart(2, '0')
+    return `${displayHours}:${displayMinutes} ${isPM ? 'PM' : 'AM'}`
   }
+
+  return `${to12h(hours, minutes)} - ${to12h(endHours, endMins)}`
+}
 
   return (
     <div className="flex flex-col lg:flex-row gap-8">
