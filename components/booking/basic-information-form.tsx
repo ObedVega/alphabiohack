@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Clock, MapPin, Plus, Stethoscope, User } from "lucide-react"
 import { useFormatter, useTranslations } from "next-intl"
 import { useLocations, useServices, useSpecialties, useTherapist } from "@/hooks"
-import { PST_TZ } from "@/lib/utils/timezone"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -58,45 +57,37 @@ export function BasicInformationForm() {
   // Calcular duración total
   const totalDuration = selectedServices.reduce((total, service) => total + service.duration, 0)
 
-  // Formatear fecha seleccionada usando useFormatter
+  // Formatear fecha seleccionada
   const formatSelectedDate = () => {
     if (!data.selectedDate) return t('selectDate')
     
     return format.dateTime(data.selectedDate, {
       weekday: "long",
       day: "numeric",
-      month: "long",
-      timeZone: PST_TZ
+      month: "long"
     })
   }
 
-  // Formatear hora seleccionada usando useFormatter
-  const formatSelectedTime = () => {
-    if (!data.selectedTime) return t('selectTime')
-    
-    const [hours, minutes] = data.selectedTime.split(":")
-    const startTime = new Date()
-    startTime.setHours(parseInt(hours), parseInt(minutes), 0, 0)
-    
-    const endTime = new Date()
-    endTime.setHours(parseInt(hours), parseInt(minutes) + totalDuration, 0, 0)
-    
-    const startTime12 = format.dateTime(startTime, {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-      timeZone: PST_TZ
-    })
-    
-    const endTime12 = format.dateTime(endTime, {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-      timeZone: PST_TZ
-    })
-    
-    return `${startTime12} - ${endTime12}`
+  // Formatear hora seleccionada
+const formatSelectedTime = () => {
+  if (!data.selectedTime) return t('selectTime')
+  const [hours, minutes] = data.selectedTime.split(':').map(Number)
+
+  // calcula hora de término sumando la duración total en minutos
+  const endMinutesTotal = hours * 60 + minutes + totalDuration
+  const endHours = Math.floor(endMinutesTotal / 60) % 24
+  const endMins = endMinutesTotal % 60
+
+  // función auxiliar para convertir HH:mm a formato 12 h
+  const to12h = (h: number, m: number) => {
+    const isPM = h >= 12
+    const displayHours = h % 12 === 0 ? 12 : h % 12
+    const displayMinutes = m.toString().padStart(2, '0')
+    return `${displayHours}:${displayMinutes} ${isPM ? 'PM' : 'AM'}`
   }
+
+  return `${to12h(hours, minutes)} - ${to12h(endHours, endMins)}`
+}
 
   return (
     <div className="flex flex-col lg:flex-row gap-8">
