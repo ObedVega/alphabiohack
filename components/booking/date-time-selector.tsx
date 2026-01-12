@@ -135,23 +135,21 @@ export function DateTimeSelector() {
     }
     
     const minutesToTime = (minutes: number) => {
-      const hours = Math.floor(minutes / 60)
-      const mins = minutes % 60
-      const timeString = `${hours.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}`
-      
-      // Convertir a formato AM/PM en PST para mostrar
-      const date = new Date()
-      const dateInPst = new Date(date)
-      dateInPst.setHours(hours, mins, 0, 0)
+      const hours = Math.floor(minutes / 60);
+      const mins = minutes % 60;
+      const value = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
+
+      // formatear en formato 12 horas
+      const isPM = hours >= 12;
+      const displayHour = ((hours + 11) % 12) + 1;
+      const displayMinute = mins.toString().padStart(2, '0');
+      const ampm = isPM ? 'PM' : 'AM';
+
       return {
-        value: timeString, // Valor para almacenar (formato 24h)
-        display: format.dateTime(dateInPst, { 
-          hour: 'numeric', 
-          minute: 'numeric',
-          timeZone: PST_TZ
-        }) // Valor para mostrar (formato AM/PM)
-      }
-    }
+        value,
+        display: `${displayHour}:${displayMinute} ${ampm}`,
+      };
+    };
 
     // Filtrar slots que pueden acomodar la duración total del servicio
     const validSlots = baseSlots.filter(slot => {
@@ -208,7 +206,8 @@ export function DateTimeSelector() {
         const key = dateKeyInTZ(d, PST_TZ)
         if (key.slice(0, 7) === currentMonthKey) {
           // almacenar como Date para el calendario, usando la fecha construida desde la clave (evitar tz local)
-          results.push(new Date(key + "T00:00:00Z"))
+          //results.push(new Date(key + "T00:00:00Z"))
+          results.push(new Date(key + "T12:00:00Z"))
         }
       }
     }
@@ -389,10 +388,12 @@ export function DateTimeSelector() {
                 modifiersClassNames={{ booked: "opacity-60 line-through" }}
                 className="bg-transparent p-0 w-full"
                 formatters={{
-                  formatWeekdayName: (date) => {
-                    return date.toLocaleString("en-US", { weekday: "short" })
-                  },
-                }}
+                formatWeekdayName: (date) =>
+                  new Intl.DateTimeFormat("en-US", {
+                    weekday: "short",
+                    timeZone: PST_TZ,
+                  }).format(date),
+              }}
               />
             </section>
 
@@ -450,6 +451,7 @@ export function DateTimeSelector() {
                           <div>
                             <p className="text-xs text-muted-foreground">{t('time')}</p>
                             <p className="text-sm font-semibold text-foreground">
+                            
                               {data.selectedTime ? format.dateTime(new Date(`2000-01-01T${data.selectedTime}`), {
                                 hour: 'numeric',
                                 minute: 'numeric',
