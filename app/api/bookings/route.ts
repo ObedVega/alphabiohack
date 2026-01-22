@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
       // enviar invitaciones (terapeuta y paciente)
       try {
         const language = await getServerLanguage();
-        const start = new Date(booking.bookingSchedule);
+        const start = booking.bookingSchedule;
         const serviceId = (booking as { serviceId?: string }).serviceId;
         // Determinar duración del servicio de forma robusta
         let durationMin = booking.service?.duration as number | undefined;
@@ -261,7 +261,7 @@ export async function POST(request: NextRequest) {
     // envío de invitación (terapeuta y paciente)
     try {
       const language = await getServerLanguage();
-      const start = new Date(booking.bookingSchedule);
+      const start = booking.bookingSchedule;
       const serviceId = (booking as { serviceId?: string }).serviceId;
       // Determinar duración de forma robusta
       let durationMin = booking.service?.duration as number | undefined;

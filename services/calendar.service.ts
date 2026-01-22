@@ -15,7 +15,7 @@ export interface TherapistInvitePayload {
   bookingId: string;
   organizerEmail?: string;
   attendeeEmail: string;
-  timeZone?: string;
+  timeZone: string;
 }
 
 export function buildTherapistInviteArtifacts(payload: TherapistInvitePayload) {
@@ -87,6 +87,7 @@ export function buildTherapistInviteArtifacts(payload: TherapistInvitePayload) {
     end,
     googleCalendarUrl,
     language,
+    timeZone,
   });
 
   const subject = `Nueva cita: ${patientName}`;
@@ -106,7 +107,7 @@ export interface PatientInvitePayload {
   bookingId: string;
   organizerEmail?: string;
   attendeeEmail: string; // paciente
-  timeZone?: string;
+  timeZone: string;
 }
 
 export function buildPatientInviteArtifacts(payload: PatientInvitePayload) {
@@ -184,6 +185,7 @@ export function buildPatientInviteArtifacts(payload: PatientInvitePayload) {
     end,
     googleCalendarUrl,
     language,
+    timeZone,
   });
 
   const subject =
