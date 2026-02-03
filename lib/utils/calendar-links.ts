@@ -19,7 +19,8 @@ function toGoogleDateUTC(date: Date): string {
   const hh = pad(date.getUTCHours());
   const mm = pad(date.getUTCMinutes());
   const ss = pad(date.getUTCSeconds());
-  return `${yyyy}${MM}${dd}T${hh}${mm}${ss}Z`;
+  //return `${yyyy}${MM}${dd}T${hh}${mm}${ss}Z`;
+   return `${yyyy}${MM}${dd}T${hh}${mm}${ss}`; // removing the: Z`
 }
 
 export function buildGoogleCalendarUrl(
@@ -36,7 +37,7 @@ export function buildGoogleCalendarUrl(
     details: input.description || "",
     location: input.location || "",
   });
-  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+  return `https://calendar.google.com/calendar/render?${params.toString()}&ctz=${encodeURIComponent(tz)}`;
 }
 
 export function buildICS(
@@ -66,9 +67,9 @@ export function buildICS(
     "CALSCALE:GREGORIAN",
     "METHOD:REQUEST",
     "BEGIN:VEVENT",
-    `UID:${input.uid}`,
-    `DTSTAMP:${dtstamp}`,
-    `DTSTART:${dtstart}`,
+    `DTSTAMP:${dtstamp}Z`, //added the Z removed from toGoogleDateUTC
+    `DTSTART;TZID=${tz}:${dtstart}`,
+    `DTEND;TZID=${tz}:${dtend}`,
     `DTEND:${dtend}`,
     organizer,
     `SUMMARY:${input.title}`,
