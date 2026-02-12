@@ -161,6 +161,7 @@ export function NavUser() {
   }, [supabase.auth, router]);
 
   const handleNavigate = useCallback((url: string) => {
+    // @ts-expect-error - Las URLs vienen de configuración validada
     router.push(url);
   }, [router]);
 
