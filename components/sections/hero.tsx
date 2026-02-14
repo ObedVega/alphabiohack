@@ -1,3 +1,5 @@
+"use client"
+
 import { CalendarDays, MapPin } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
@@ -5,9 +7,14 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from 'next-intl';
+import { useUser } from "@/contexts/user-context";
 
 export function HeroSection() {
   const t = useTranslations('Hero');
+  const { prismaUser } = useUser();
+  
+  // Usar el avatar del usuario si existe, si no usar la imagen por defecto
+  const imageSource = prismaUser?.avatar || "https://bwqlvbnkfkrchjdbbcfl.supabase.co/storage/v1/object/public/avatars/ff21719d-ad00-4c1b-9274-c9452b556728/Imagen%20de%20WhatsApp%202025-09-09%20a%20las%2012.47.07_7afb8bfa.jpg";
   return (
     <section className="bg-linear-to-br from-background to-muted py-20 lg:py-32">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -58,13 +65,23 @@ export function HeroSection() {
             <div className="relative w-full max-w-md mx-auto">
               <div className="absolute inset-0 bg-primary rounded-full transform scale-110 opacity-20"></div>
               <div className="relative bg-primary rounded-full p-8">
-                <Image
-                  src="https://bwqlvbnkfkrchjdbbcfl.supabase.co/storage/v1/object/public/avatars/ff21719d-ad00-4c1b-9274-c9452b556728/Imagen%20de%20WhatsApp%202025-09-09%20a%20las%2012.47.07_7afb8bfa.jpg"
-                  alt={t('doctorImageAlt')}
-                  className="w-full h-auto rounded-full object-cover"
-                  width={500}
-                  height={500}
-                />
+                {imageSource.startsWith('data:image') ? (
+                  // Si es base64, usar img regular
+                  <img
+                    src={imageSource}
+                    alt={t('doctorImageAlt')}
+                    className="w-full h-auto rounded-full object-cover"
+                  />
+                ) : (
+                  // Si es URL, usar Next.js Image
+                  <Image
+                    src={imageSource}
+                    alt={t('doctorImageAlt')}
+                    className="w-full h-auto rounded-full object-cover"
+                    width={500}
+                    height={500}
+                  />
+                )}
               </div>
             </div>
           </div>

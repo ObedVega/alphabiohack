@@ -916,6 +916,10 @@
     "emailCannotBeChanged": "Email cannot be changed",
     "avatar": "Avatar URL",
     "enterAvatarUrl": "Enter your avatar image URL",
+    "phone": "Phone",
+    "enterPhone": "Enter your phone number",
+    "address": "Address",
+    "enterAddress": "Enter your address",
     "saveChanges": "Save Changes",
     "cancel": "Cancel"
   }

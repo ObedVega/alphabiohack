@@ -905,6 +905,10 @@
     "emailCannotBeChanged": "El correo electrónico no se puede cambiar",
     "avatar": "URL del Avatar",
     "enterAvatarUrl": "Ingresa la URL de tu imagen de avatar",
+    "phone": "Teléfono",
+    "enterPhone": "Ingresa tu número de teléfono",
+    "address": "Dirección",
+    "enterAddress": "Ingresa tu dirección",
     "saveChanges": "Guardar Cambios",
     "cancel": "Cancelar"
   }
