@@ -15,6 +15,14 @@ export function HeroSection() {
   
   // Usar el avatar del usuario si existe, si no usar la imagen por defecto
   const imageSource = prismaUser?.avatar || "https://bwqlvbnkfkrchjdbbcfl.supabase.co/storage/v1/object/public/avatars/ff21719d-ad00-4c1b-9274-c9452b556728/Imagen%20de%20WhatsApp%202025-09-09%20a%20las%2012.47.07_7afb8bfa.jpg";
+  
+  // Construir el título dinámico con nombre del usuario
+  const fullName = prismaUser ? `${prismaUser.firstname} ${prismaUser.lastname}` : null;
+  const dynamicTitle = fullName ? `Hello, I'm ${fullName}` : t('title');
+  
+  // Obtener especialidad y summary del usuario
+  const especialidad = (prismaUser as any)?.especialidad || t('subtitle');
+  const summary = (prismaUser as any)?.summary || t('description');
   return (
     <section className="bg-linear-to-br from-background to-muted py-20 lg:py-32">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,12 +31,12 @@ export function HeroSection() {
           <div className="space-y-8">
             <div className="space-y-4">
               <h1 className="text-4xl lg:text-6xl font-bold text-balance">
-                <span className="text-primary">{t('title')}</span>
+                <span className="text-primary">{dynamicTitle}</span>
                 <br />
-                <span className="text-foreground">{t('subtitle')}</span>
+                <span className="text-foreground">{especialidad}</span>
               </h1>
               <p className="text-lg text-muted-foreground text-pretty max-w-lg">
-                {t('description')}
+                {summary}
               </p>
             </div>
 

@@ -58,7 +58,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { firstname, lastname, avatar, telefono, informacionPublica, weekdaysHours, saturdayHours, sundayHours } = body;
+    const { firstname, lastname, avatar, telefono, informacionPublica, especialidad, summary, weekdaysHours, saturdayHours, sundayHours } = body;
 
     const updatedUser = await prisma.user.update({
       where: { supabaseId: user.id },
@@ -68,6 +68,8 @@ export async function PUT(request: NextRequest) {
         avatar: avatar || undefined,
         telefono: telefono || undefined,
         informacionPublica: informacionPublica || undefined,
+        especialidad: especialidad || undefined,
+        summary: summary || undefined,
         weekdaysHours: weekdaysHours || undefined,
         saturdayHours: saturdayHours || undefined,
         sundayHours: sundayHours || undefined,

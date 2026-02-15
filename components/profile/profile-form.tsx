@@ -17,6 +17,8 @@ interface UserProfile {
   avatar?: string;
   telefono?: string;
   informacionPublica?: string;
+  especialidad?: string;
+  summary?: string;
   weekdaysHours?: string;
   saturdayHours?: string;
   sundayHours?: string;
@@ -35,6 +37,8 @@ export function ProfileForm() {
     avatar: "",
     telefono: "",
     informacionPublica: "",
+    especialidad: "",
+    summary: "",
     weekdaysHours: "9:00 AM - 6:00 PM",
     saturdayHours: "9:00 AM - 2:00 PM",
     sundayHours: "Closed",
@@ -51,6 +55,8 @@ export function ProfileForm() {
         telefono: (prismaUser as { telefono?: string | null }).telefono ?? "",
         informacionPublica: (prismaUser as { informacionPublica?: string | null }).informacionPublica ?? "",
         avatar: prismaUser.avatar || "",
+        especialidad: (prismaUser as { especialidad?: string | null }).especialidad ?? "",
+        summary: (prismaUser as { summary?: string | null }).summary ?? "",
         weekdaysHours: (prismaUser as { weekdaysHours?: string | null }).weekdaysHours ?? "9:00 AM - 6:00 PM",
         saturdayHours: (prismaUser as { saturdayHours?: string | null }).saturdayHours ?? "9:00 AM - 2:00 PM",
         sundayHours: (prismaUser as { sundayHours?: string | null }).sundayHours ?? "Closed",
@@ -137,6 +143,8 @@ export function ProfileForm() {
           avatar: formData.avatar,
           informacionPublica: formData.informacionPublica,
           telefono: formData.telefono,
+          especialidad: formData.especialidad,
+          summary: formData.summary,
           weekdaysHours: formData.weekdaysHours,
           saturdayHours: formData.saturdayHours,
           sundayHours: formData.sundayHours,
@@ -274,6 +282,35 @@ export function ProfileForm() {
           value={formData.informacionPublica || ""}
           onChange={handleChange}
           placeholder={t("enterAddress", { default: "Ingresa tu dirección" })}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="especialidad" className="text-sm font-medium">
+          Especialidad
+        </label>
+        <Input
+          id="especialidad"
+          name="especialidad"
+          type="text"
+          value={formData.especialidad || ""}
+          onChange={handleChange}
+          placeholder="Ingresa tu especialidad"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="summary" className="text-sm font-medium">
+          Summary / Bio
+        </label>
+        <textarea
+          id="summary"
+          name="summary"
+          value={formData.summary || ""}
+          onChange={(e) => setFormData((prev) => ({ ...prev, summary: e.target.value }))}
+          placeholder="Breve descripción sobre ti"
+          className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          rows={4}
         />
       </div>
 
