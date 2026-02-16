@@ -8,30 +8,31 @@ import Image from "next/image"
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from 'next-intl';
 import { useUser } from "@/contexts/user-context";
-import { useEffect, useState } from "react";
 
 export function HeroSection() {
   const t = useTranslations('Hero');
-  const { prismaUser } = useUser();
-  const [isHydrated, setIsHydrated] = useState(false);
-  
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
+  const { prismaUser, loading } = useUser();
   
   // Usar el avatar del usuario si existe, si no usar la imagen por defecto
   const imageSource = prismaUser?.avatar || "https://bwqlvbnkfkrchjdbbcfl.supabase.co/storage/v1/object/public/avatars/ff21719d-ad00-4c1b-9274-c9452b556728/Imagen%20de%20WhatsApp%202025-09-09%20a%20las%2012.47.07_7afb8bfa.jpg";
   
-  // Construir el título dinámico con nombre del usuario - solo si está hidratado
-  const fullName = isHydrated && prismaUser ? `${prismaUser.firstname} ${prismaUser.lastname}` : null;
+  // Construir el título dinámico - PRIORIDAD: datos de BD primero
+  const fullName = prismaUser ? `${prismaUser.firstname} ${prismaUser.lastname}` : null;
   const dynamicTitle = fullName ? `Hello, I'm ${fullName}` : t('title');
   
-  // Obtener especialidad y summary del usuario - solo si está hidratado
-  const especialidad = isHydrated ? ((prismaUser as { especialidad?: string | null })?.especialidad || t('subtitle')) : t('subtitle');
-  const summary = isHydrated ? ((prismaUser as { summary?: string | null })?.summary || t('description')) : t('description');
+  // Obtener especialidad y summary - PRIORIDAD: datos de BD primero
+  const especialidad = (prismaUser as { especialidad?: string | null })?.especialidad || t('subtitle');
+  const summary = (prismaUser as { summary?: string | null })?.summary || t('description');
   return (
-    <section className="bg-linear-to-br from-background to-muted py-20 lg:py-32" suppressHydrationWarning={true}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="bg-linear-to-br from-background to-muted py-20 lg:py-32" suppressHydrationWarning>
+      {loading ? (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center items-center min-h-96">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Cargando información...</p>
+          </div>
+        </div>
+      ) : (
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div className="space-y-8">
@@ -92,7 +93,7 @@ export function HeroSection() {
             </div>
           </div>
         </div>
-      </div>
+      )}
     </section>
   )
 }

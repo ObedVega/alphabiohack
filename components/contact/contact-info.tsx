@@ -8,7 +8,6 @@
 "use client";
 
 import { Mail, MapPin, Phone } from "lucide-react";
-import { useEffect, useState } from "react";
 
 import { BusinessHours } from "@/components/contact/business-hours";
 import { InfoCard } from "@/components/contact/info-card";
@@ -21,16 +20,23 @@ interface ContactInfoProps {
 
 export function ContactInfo({ className }: ContactInfoProps) {
   const t = useTranslations("Contact");
-  const { prismaUser } = useUser();
-  const [isHydrated, setIsHydrated] = useState(false);
+  const { prismaUser, loading } = useUser();
 
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
+  // Mostrar loader mientras carga
+  if (loading) {
+    return (
+      <div className={`space-y-6 ${className || ""}`}>
+        <div className="text-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+          <p className="text-muted-foreground text-sm">Cargando información de contacto...</p>
+        </div>
+      </div>
+    );
+  }
 
-  // Obtener el número de teléfono del usuario o usar el del JSON como fallback - solo si está hidratado
-  const phoneNumber = isHydrated ? (prismaUser?.telefono || t("phoneNumber")) : t("phoneNumber");
-  const address = isHydrated ? (prismaUser?.informacionPublica || t("address")) : t("address");
+  // Obtener datos de BD - PRIORIDAD: datos de BD primero
+  const phoneNumber = prismaUser?.telefono || t("phoneNumber");
+  const address = prismaUser?.informacionPublica || t("address");
 
   return (
     <div className={`space-y-6 ${className || ""}`}>
