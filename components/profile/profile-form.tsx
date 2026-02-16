@@ -248,6 +248,7 @@ export function ProfileForm() {
         {formData.avatar && formData.avatar.startsWith("data:image") && (
           <div className="mt-4">
             <p className="text-sm text-muted-foreground mb-2">Vista previa:</p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={formData.avatar}
               alt="Avatar preview"

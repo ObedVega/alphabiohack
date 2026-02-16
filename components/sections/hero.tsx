@@ -21,8 +21,8 @@ export function HeroSection() {
   const dynamicTitle = fullName ? `Hello, I'm ${fullName}` : t('title');
   
   // Obtener especialidad y summary del usuario
-  const especialidad = (prismaUser as any)?.especialidad || t('subtitle');
-  const summary = (prismaUser as any)?.summary || t('description');
+  const especialidad = (prismaUser as { especialidad?: string | null })?.especialidad || t('subtitle');
+  const summary = (prismaUser as { summary?: string | null })?.summary || t('description');
   return (
     <section className="bg-linear-to-br from-background to-muted py-20 lg:py-32">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -75,6 +75,7 @@ export function HeroSection() {
               <div className="relative bg-primary rounded-full p-8">
                 {imageSource.startsWith('data:image') ? (
                   // Si es base64, usar img regular
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={imageSource}
                     alt={t('doctorImageAlt')}
