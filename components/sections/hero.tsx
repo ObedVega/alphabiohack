@@ -13,32 +13,31 @@ export function HeroSection() {
   const t = useTranslations('Hero');
   const { prismaUser, loading } = useUser();
   
-  // Usar el avatar del usuario si existe, si no usar la imagen por defecto
-  const imageSource = prismaUser?.avatar || "https://bwqlvbnkfkrchjdbbcfl.supabase.co/storage/v1/object/public/avatars/ff21719d-ad00-4c1b-9274-c9452b556728/Imagen%20de%20WhatsApp%202025-09-09%20a%20las%2012.47.07_7afb8bfa.jpg";
+  // Usar el avatar del usuario si existe
+  const imageSource = prismaUser?.avatar || "";
   
-  // Construir el título dinámico - PRIORIDAD: datos de BD primero
-  const fullName = prismaUser ? `${prismaUser.firstname} ${prismaUser.lastname}` : null;
-  const dynamicTitle = fullName ? `Hello, I'm ${fullName}` : t('title');
+  // Datos directamente de BD, sin fallbacks
+  const fullName = prismaUser ? `${prismaUser.firstname} ${prismaUser.lastname}` : "";
+  const especialidad = (prismaUser as { especialidad?: string | null })?.especialidad || "";
+  const summary = (prismaUser as { summary?: string | null })?.summary || "";
   
-  // Obtener especialidad y summary - PRIORIDAD: datos de BD primero
-  const especialidad = (prismaUser as { especialidad?: string | null })?.especialidad || t('subtitle');
-  const summary = (prismaUser as { summary?: string | null })?.summary || t('description');
   return (
     <section className="bg-linear-to-br from-background to-muted py-20 lg:py-32" suppressHydrationWarning>
       {loading ? (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center items-center min-h-96">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Cargando información...</p>
+            <p className="text-muted-foreground">Cargando...</p>
           </div>
         </div>
       ) : (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div className="space-y-8">
             <div className="space-y-4">
               <h1 className="text-4xl lg:text-6xl font-bold text-balance">
-                <span className="text-primary">{dynamicTitle}</span>
+                <span className="text-primary">Hello, I`m {fullName}</span>
                 <br />
                 <span className="text-foreground">{especialidad}</span>
               </h1>
@@ -47,7 +46,6 @@ export function HeroSection() {
               </p>
             </div>
 
-            {/* Search Form */}
             <div className="bg-card p-6 rounded-lg shadow-xs border border-border">
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="relative">
@@ -81,17 +79,20 @@ export function HeroSection() {
               <div className="absolute inset-0 bg-primary rounded-full transform scale-110 opacity-20"></div>
               <div className="relative bg-primary rounded-full p-8">
                
-                  <Image
-                    src={imageSource}
-                    alt={t('doctorImageAlt')}
-                    className="w-full h-auto rounded-full object-cover"
-                    width={500}
-                    height={500}
-                  />
+                  {imageSource && (
+                    <Image
+                      src={imageSource}
+                      alt={`${fullName} profile`}
+                      className="w-full h-auto rounded-full object-cover"
+                      width={500}
+                      height={500}
+                    />
+                  )}
                 
               </div>
             </div>
           </div>
+        </div>
         </div>
       )}
     </section>

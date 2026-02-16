@@ -28,33 +28,37 @@ export function ContactInfo({ className }: ContactInfoProps) {
       <div className={`space-y-6 ${className || ""}`}>
         <div className="text-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-          <p className="text-muted-foreground text-sm">Cargando información de contacto...</p>
+          <p className="text-muted-foreground text-sm">Cargando...</p>
         </div>
       </div>
     );
   }
 
-  // Obtener datos de BD - PRIORIDAD: datos de BD primero
-  const phoneNumber = prismaUser?.telefono || t("phoneNumber");
-  const address = prismaUser?.informacionPublica || t("address");
+  // Mostrar solo datos de BD, sin fallbacks
+  const phoneNumber = prismaUser?.telefono || "";
+  const address = prismaUser?.informacionPublica || "";
 
   return (
     <div className={`space-y-6 ${className || ""}`}>
       {/* Dirección */}
-      <InfoCard
-        icon={<MapPin className="h-6 w-6 text-blue-600" />}
-        title={t("address")}
-      >
-        <p className="">{address}</p>
-      </InfoCard>
+      {address && (
+        <InfoCard
+          icon={<MapPin className="h-6 w-6 text-blue-600" />}
+          title={t("address")}
+        >
+          <p className="">{address}</p>
+        </InfoCard>
+      )}
 
       {/* Teléfono */}
-      <InfoCard
-        icon={<Phone className="h-6 w-6 text-blue-600" />}
-        title={t("phone")}
-      >
-        <p className="">{phoneNumber}</p>
-      </InfoCard>
+      {phoneNumber && (
+        <InfoCard
+          icon={<Phone className="h-6 w-6 text-blue-600" />}
+          title={t("phone")}
+        >
+          <p className="">{phoneNumber}</p>
+        </InfoCard>
+      )}
 
       {/* Email */}
       <InfoCard
