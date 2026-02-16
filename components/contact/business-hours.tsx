@@ -8,6 +8,9 @@ interface BusinessHoursProps {
   saturday?: string;
   sunday?: string;
   className?: string;
+  weekdaysHours?: string | null;
+  saturdayHours?: string | null;
+  sundayHours?: string | null;
 }
 
 interface UserBusinessHours {
@@ -21,16 +24,19 @@ export function BusinessHours({
   saturday,
   sunday,
   className,
+  weekdaysHours: propsWeekdaysHours,
+  saturdayHours: propsSaturdayHours,
+  sundayHours: propsSundayHours,
 }: BusinessHoursProps) {
   const t = useTranslations('Contact');
   const { prismaUser } = useUser();
 
   const user = prismaUser as UserBusinessHours | null;
 
-  // Usar datos del usuario si están disponibles, si no usar los props por defecto
-  const weekdaysHours = user?.weekdaysHours || weekdays || "9:00 AM - 6:00 PM";
-  const saturdayHours = user?.saturdayHours || saturday || "9:00 AM - 2:00 PM";
-  const sundayHours = user?.sundayHours || sunday || "Closed";
+  // Usar datos de los props si vienen (datos públicos), sino del usuario autenticado, sino defaults
+  const weekdaysHours = propsWeekdaysHours || user?.weekdaysHours || weekdays || "9:00 AM - 6:00 PM";
+  const saturdayHours = propsSaturdayHours || user?.saturdayHours || saturday || "9:00 AM - 2:00 PM";
+  const sundayHours = propsSundayHours || user?.sundayHours || sunday || "Closed";
 
   return (
     <div className={`p-6 rounded-lg bg-card text-card-foreground ${className || ''}`}>

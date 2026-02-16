@@ -107,7 +107,11 @@ export function ContactInfo({ className }: ContactInfoProps) {
       </InfoCard>
 
       {/* Horarios de Atención */}
-      <BusinessHours />
+      <BusinessHours 
+        weekdaysHours={contactData?.weekdaysHours}
+        saturdayHours={contactData?.saturdayHours}
+        sundayHours={contactData?.sundayHours}
+      />
     </div>
   );
 }
