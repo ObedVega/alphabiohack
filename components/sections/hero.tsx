@@ -9,6 +9,7 @@ import { Link } from "@/i18n/navigation";
 import { useTranslations } from 'next-intl';
 import { useUser } from "@/contexts/user-context";
 import { useState, useEffect } from "react";
+import { HeroSkeleton } from "@/components/sections/hero-skeleton";
 
 interface HeroData {
   firstname: string;
@@ -22,14 +23,13 @@ export function HeroSection() {
   const t = useTranslations('Hero');
   const { prismaUser, loading: authLoading, isAuthenticated } = useUser();
   const [publicData, setPublicData] = useState<HeroData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [publicLoading, setPublicLoading] = useState(true);
 
   // Cuando no estamos autenticados, traer datos públicos
   useEffect(() => {
     if (!isAuthenticated) {
       const fetchPublicHero = async () => {
         try {
-          setLoading(true);
           const response = await fetch("/api/public/hero");
           if (response.ok) {
             const data = await response.json();
@@ -38,15 +38,15 @@ export function HeroSection() {
         } catch (error) {
           console.error("Error fetching public hero data:", error);
         } finally {
-          setLoading(false);
+          setPublicLoading(false);
         }
       };
       fetchPublicHero();
-    } else {
-      // Si estamos autenticados, usar datos del contexto
-      setLoading(authLoading);
     }
-  }, [isAuthenticated, authLoading]);
+  }, [isAuthenticated]);
+
+  // Determinar si estamos cargando
+  const loading = isAuthenticated ? authLoading : publicLoading;
 
   // Usar datos autenticados si existen, sino usar públicos
   const heroData = isAuthenticated ? prismaUser : publicData;
@@ -57,13 +57,8 @@ export function HeroSection() {
   
   return (
     <section className="bg-linear-to-br from-background to-muted py-20 lg:py-32" suppressHydrationWarning>
-      {loading ? (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center items-center min-h-96">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Cargando...</p>
-          </div>
-        </div>
+      {loading || !heroData ? (
+        <HeroSkeleton />
       ) : (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">

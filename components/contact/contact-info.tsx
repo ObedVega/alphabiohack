@@ -14,6 +14,7 @@ import { BusinessHours } from "@/components/contact/business-hours";
 import { InfoCard } from "@/components/contact/info-card";
 import { useTranslations } from "next-intl";
 import { useUser } from "@/contexts/user-context";
+import { ContactInfoSkeleton } from "@/components/contact/contact-info-skeleton";
 
 interface ContactData {
   telefono?: string | null;
@@ -31,14 +32,13 @@ export function ContactInfo({ className }: ContactInfoProps) {
   const t = useTranslations("Contact");
   const { prismaUser, loading: authLoading, isAuthenticated } = useUser();
   const [publicData, setPublicData] = useState<ContactData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [publicLoading, setPublicLoading] = useState(true);
 
   // Cuando no estamos autenticados, traer datos públicos
   useEffect(() => {
     if (!isAuthenticated) {
       const fetchPublicContact = async () => {
         try {
-          setLoading(true);
           const response = await fetch("/api/public/contact");
           if (response.ok) {
             const data = await response.json();
@@ -47,27 +47,24 @@ export function ContactInfo({ className }: ContactInfoProps) {
         } catch (error) {
           console.error("Error fetching public contact data:", error);
         } finally {
-          setLoading(false);
+          setPublicLoading(false);
         }
       };
       fetchPublicContact();
-    } else {
-      // Si estamos autenticados, usar datos del contexto
-      setLoading(authLoading);
     }
-  }, [isAuthenticated, authLoading]);
+  }, [isAuthenticated]);
+
+  // Determinar si estamos cargando
+  const loading = isAuthenticated ? authLoading : publicLoading;
 
   // Usar datos autenticados si existen, sino usar públicos
   const contactData = isAuthenticated ? prismaUser : publicData;
 
   // Mostrar loader mientras carga
-  if (loading) {
+  if (loading || !contactData) {
     return (
-      <div className={`space-y-6 ${className || ""}`}>
-        <div className="text-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-          <p className="text-muted-foreground text-sm">Cargando...</p>
-        </div>
+      <div className={`${className || ""}`}>
+        <ContactInfoSkeleton />
       </div>
     );
   }
