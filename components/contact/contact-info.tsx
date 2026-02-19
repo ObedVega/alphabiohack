@@ -15,6 +15,7 @@ import { InfoCard } from "@/components/contact/info-card";
 import { useTranslations } from "next-intl";
 import { useUser } from "@/contexts/user-context";
 import { ContactInfoSkeleton } from "@/components/contact/contact-info-skeleton";
+import { SocialLinks } from "@/components/common/social-links";
 
 interface ContactData {
   telefono?: string | null;
@@ -22,6 +23,13 @@ interface ContactData {
   weekdaysHours?: string | null;
   saturdayHours?: string | null;
   sundayHours?: string | null;
+  facebook?: string | null;
+  instagram?: string | null;
+  linkedin?: string | null;
+  twitter?: string | null;
+  tiktok?: string | null;
+  youtube?: string | null;
+  website?: string | null;
 }
 
 interface ContactInfoProps {
@@ -72,6 +80,7 @@ export function ContactInfo({ className }: ContactInfoProps) {
   // Mostrar solo datos de BD, sin fallbacks
   const phoneNumber = contactData?.telefono || "";
   const address = contactData?.informacionPublica || "";
+  const socialData = contactData && "facebook" in contactData ? contactData : null;
 
   return (
     <div className={`space-y-6 ${className || ""}`}>
@@ -100,7 +109,21 @@ export function ContactInfo({ className }: ContactInfoProps) {
         icon={<Mail className="h-6 w-6 text-blue-600" />}
         title={t("email")}
       >
-        <p className="">{t("emailAddress")}</p>
+        <div className="space-y-4">
+          <p className="">{t("emailAddress")}</p>
+          
+          {/* Social Links */}
+          <SocialLinks
+            facebook={socialData?.facebook}
+            instagram={socialData?.instagram}
+            linkedin={socialData?.linkedin}
+            twitter={socialData?.twitter}
+            tiktok={socialData?.tiktok}
+            youtube={socialData?.youtube}
+            website={socialData?.website}
+            iconSize={24}
+          />
+        </div>
       </InfoCard>
 
       {/* Horarios de Atención */}

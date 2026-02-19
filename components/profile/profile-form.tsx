@@ -22,6 +22,13 @@ interface UserProfile {
   weekdaysHours?: string;
   saturdayHours?: string;
   sundayHours?: string;
+  facebook?: string;
+  instagram?: string;
+  linkedin?: string;
+  twitter?: string;
+  tiktok?: string;
+  youtube?: string;
+  website?: string;
 }
 
 export function ProfileForm() {
@@ -42,6 +49,13 @@ export function ProfileForm() {
     weekdaysHours: "9:00 AM - 6:00 PM",
     saturdayHours: "9:00 AM - 2:00 PM",
     sundayHours: "Closed",
+    facebook: "",
+    instagram: "",
+    linkedin: "",
+    twitter: "",
+    tiktok: "",
+    youtube: "",
+    website: "",
   });
 
   useEffect(() => {
@@ -60,6 +74,13 @@ export function ProfileForm() {
         weekdaysHours: (prismaUser as { weekdaysHours?: string | null }).weekdaysHours ?? "9:00 AM - 6:00 PM",
         saturdayHours: (prismaUser as { saturdayHours?: string | null }).saturdayHours ?? "9:00 AM - 2:00 PM",
         sundayHours: (prismaUser as { sundayHours?: string | null }).sundayHours ?? "Closed",
+        facebook: (prismaUser as { facebook?: string | null }).facebook ?? "",
+        instagram: (prismaUser as { instagram?: string | null }).instagram ?? "",
+        linkedin: (prismaUser as { linkedin?: string | null }).linkedin ?? "",
+        twitter: (prismaUser as { twitter?: string | null }).twitter ?? "",
+        tiktok: (prismaUser as { tiktok?: string | null }).tiktok ?? "",
+        youtube: (prismaUser as { youtube?: string | null }).youtube ?? "",
+        website: (prismaUser as { website?: string | null }).website ?? "",
       });
     } else {
       console.log("ProfileForm: No prismaUser available");
@@ -148,6 +169,13 @@ export function ProfileForm() {
           weekdaysHours: formData.weekdaysHours,
           saturdayHours: formData.saturdayHours,
           sundayHours: formData.sundayHours,
+          facebook: formData.facebook,
+          instagram: formData.instagram,
+          linkedin: formData.linkedin,
+          twitter: formData.twitter,
+          tiktok: formData.tiktok,
+          youtube: formData.youtube,
+          website: formData.website,
         }),
       });
 
@@ -357,6 +385,109 @@ export function ProfileForm() {
               value={formData.sundayHours || ""}
               onChange={handleChange}
               placeholder="Closed"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="border-t pt-6">
+        <h3 className="text-lg font-semibold mb-4">Social Media Links</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label htmlFor="facebook" className="text-sm font-medium">
+              Facebook
+            </label>
+            <Input
+              id="facebook"
+              name="facebook"
+              type="url"
+              value={formData.facebook || ""}
+              onChange={handleChange}
+              placeholder="https://facebook.com/..."
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="instagram" className="text-sm font-medium">
+              Instagram
+            </label>
+            <Input
+              id="instagram"
+              name="instagram"
+              type="url"
+              value={formData.instagram || ""}
+              onChange={handleChange}
+              placeholder="https://instagram.com/..."
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="linkedin" className="text-sm font-medium">
+              LinkedIn
+            </label>
+            <Input
+              id="linkedin"
+              name="linkedin"
+              type="url"
+              value={formData.linkedin || ""}
+              onChange={handleChange}
+              placeholder="https://linkedin.com/..."
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="twitter" className="text-sm font-medium">
+              Twitter / X
+            </label>
+            <Input
+              id="twitter"
+              name="twitter"
+              type="url"
+              value={formData.twitter || ""}
+              onChange={handleChange}
+              placeholder="https://twitter.com/..."
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="tiktok" className="text-sm font-medium">
+              TikTok
+            </label>
+            <Input
+              id="tiktok"
+              name="tiktok"
+              type="url"
+              value={formData.tiktok || ""}
+              onChange={handleChange}
+              placeholder="https://tiktok.com/..."
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="youtube" className="text-sm font-medium">
+              YouTube
+            </label>
+            <Input
+              id="youtube"
+              name="youtube"
+              type="url"
+              value={formData.youtube || ""}
+              onChange={handleChange}
+              placeholder="https://youtube.com/..."
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="website" className="text-sm font-medium">
+              Website
+            </label>
+            <Input
+              id="website"
+              name="website"
+              type="url"
+              value={formData.website || ""}
+              onChange={handleChange}
+              placeholder="https://yourwebsite.com"
             />
           </div>
         </div>

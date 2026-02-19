@@ -22,6 +22,13 @@ model User {
   weekdaysHours         String?    @default("9:00 AM - 6:00 PM")
   saturdayHours         String?    @default("9:00 AM - 2:00 PM")
   sundayHours           String?    @default("Closed")
+  facebook              String?
+  instagram             String?
+  linkedin              String?
+  twitter               String?
+  tiktok                String?
+  youtube               String?
+  website               String?
   role                  UserRole[]
   createdAt             DateTime   @default(now())
   updatedAt             DateTime   @updatedAt

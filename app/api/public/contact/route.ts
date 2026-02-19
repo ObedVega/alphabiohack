@@ -11,6 +11,13 @@ export async function GET() {
         weekdaysHours: true,
         saturdayHours: true,
         sundayHours: true,
+        facebook: true,
+        instagram: true,
+        linkedin: true,
+        twitter: true,
+        tiktok: true,
+        youtube: true,
+        website: true,
       },
     });
 

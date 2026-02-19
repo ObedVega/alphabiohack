@@ -58,7 +58,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { firstname, lastname, avatar, telefono, informacionPublica, especialidad, summary, weekdaysHours, saturdayHours, sundayHours } = body;
+    const { firstname, lastname, avatar, telefono, informacionPublica, especialidad, summary, weekdaysHours, saturdayHours, sundayHours, facebook, instagram, linkedin, twitter, tiktok, youtube, website } = body;
 
     const updatedUser = await prisma.user.update({
       where: { supabaseId: user.id },
@@ -73,6 +73,13 @@ export async function PUT(request: NextRequest) {
         weekdaysHours: weekdaysHours || undefined,
         saturdayHours: saturdayHours || undefined,
         sundayHours: sundayHours || undefined,
+        facebook: facebook || undefined,
+        instagram: instagram || undefined,
+        linkedin: linkedin || undefined,
+        twitter: twitter || undefined,
+        tiktok: tiktok || undefined,
+        youtube: youtube || undefined,
+        website: website || undefined,
       },
     });
 
